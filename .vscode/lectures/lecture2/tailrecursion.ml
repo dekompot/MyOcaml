@@ -8,3 +8,9 @@ let tail_rec n =
   in rec_iter(n, 1);;
 
 tail_rec 1000000;;
+
+let rec mul n m =
+  if m = 1 then n 
+  else n + mul n (m - 1);;
+
+mul 2 3;;
