@@ -14,3 +14,13 @@ let rec mul n m =
   else n + mul n (m - 1);;
 
 mul 2 3;;
+
+let mul_ n m = 
+  let rec mul_inner n m acc = 
+    if m = 0 then acc 
+    else mul_inner n (m - 1) (acc + n)
+  in mul_inner n m 0;;
+  
+mul_ 2 3;;
+mul_ 2 600000;;
+
