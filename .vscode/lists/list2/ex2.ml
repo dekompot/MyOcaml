@@ -20,6 +20,22 @@ let fibTail n =
     else fibInner(n - 1, acc2, acc1 + acc2)
   in fibInner(n, 0, 1);;
 
+  let fibTail2 n =
+    let rec fibInner (x, acc1, acc2) =
+      if x < 0 then failwith "Negative Argument"
+      else if x = n then acc1
+      else fibInner(x + 1, acc2, acc1 + acc2)
+    in fibInner(0, 0, 1);;
+  
+fibTail2 0;;
+fibTail2 1;;
+fibTail2 2;;
+fibTail2 3;;
+fibTail2 4;;
+fibTail2 5;;
+fibTail2 6;;
+fibTail2 7;;  
+
 fibTail 0;;
 fibTail 1;;
 fibTail 2;;
@@ -39,5 +55,5 @@ fibTail 6;;
 fibTail 7;;
 
 fib 42;;
-fibTail 42;;
+(*fibTail 42;;*)
 
