@@ -1,11 +1,12 @@
 let mergesort smaller_equal xs = 
-  let rec split_to_list = function 
-  | h::t -> [h]::split_to_list t 
+  let rec split_to_lists = function 
+  | h::t -> [h]::split_to_lists t 
   | [] -> []
 in let rec merge (xs1, xs2) = 
   match (xs1, xs2) with 
   | (h1::t1, h2::t2) when smaller_equal h1 h2 ->
      h1::merge(t1, xs2)
+     (*h1::t1, otherwise it'll match an empty list in place of xs1*)
   | (h1::t1, h2::t2) -> h2::merge(xs1, t2)
   | (_, []) -> xs1
   | ([], _) -> xs2 
@@ -18,7 +19,7 @@ in let rec merge (xs1, xs2) =
     match xss with 
     | [h] -> h
     | _ -> loop (mergeinner xss)
-  in loop (split_to_list xs) ;; 
+  in loop (split_to_lists xs) ;; 
   
 mergesort (<=) [13; 5; 10; 8; 6; 22; 11; 3; 12; 20; 7; 9; 14; 17; 19; 1; 2; 18];;
 
