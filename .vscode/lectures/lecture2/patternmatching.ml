@@ -111,6 +111,7 @@ List.tl (List.tl zs) == ys;;
 
 f1;;
 
+(*as-patterns, layered patterns*)
 let ((n, w) as d, b) = x;;
 
 let f2 ((x, y) as p, z) = (x, y, p, z);;

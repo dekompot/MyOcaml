@@ -8,6 +8,10 @@ let next_char = Char.chr $. (+) 1 $. Char.code;;
 
 next_char 'b';;
 
+let shift_char s = Char.chr $. (+) s $. Char.code;;
+
+shift_char 2 'a';;
+
 abs 1 - 5;;
 (*@@ binds to the right*)
 abs @@ 1 - 5;;
@@ -22,3 +26,7 @@ div 1. @@ 2. +. 3.;;
 5 - 12 |> abs |> succ;;
 (*the same as*)
 succ (abs (5 - 12));;
+(*the same as*)
+succ @@ abs @@ 5 - 12;;
+
+let comp xs = fun y -> y < List.hd xs;;

@@ -5,6 +5,8 @@ let sigma f n =
     else sum (i + 1, acc +. f (i + 1))
   in sum (0, f 0);;
 
+let value = if true then 0 else 1 / 0;;
+
 sigma (fun k -> float(k * k))(4);;
 
 (*Calculated sum[i:0->n][j:0->m] (i + j)*)

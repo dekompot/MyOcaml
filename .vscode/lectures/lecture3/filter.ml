@@ -6,19 +6,21 @@ let rec filter pred xs =
 
 filter (fun x -> x mod 2 = 0) [1; 2; 3; 4; 5];;
 
+(*tail-recursive implementation*)
 List.filter (fun s -> String.length s <= 6) ["Litwo"; "Ojczyzno"; "Moja"];;
 
 (*function syntax works like match, but we don't have to pass matching
    argument as an argument to the function*)
 (*does not compile??*)
-(*it's complexity is O(n^2)*)
+(*it's complexity is O(n^2) because the complexity of
+   @ function is linear of the size of the 1st list*)
 let filter_bad p = 
   let rec find acc = function (*instead of match*)
   | [] -> acc 
   | x :: xs -> if p x then find (acc @ [x]) xs else find acc xs
   in find [];;
 
-(*???*)
+
 filter_bad (fun x -> x mod 3 = 0) [1; 3; 4; 6; 7; 9];;
 
 (*This has O(n) complexity*)

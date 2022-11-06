@@ -9,6 +9,16 @@ true => false;;
 (+);;
 (=);;
 
+let (<=>) b1 b2 = 
+match (b1, b2) with 
+| (true, true) -> true
+| (false, false) -> false 
+| _ -> false;;
+
+true <=> false;;
+false <=> false;;
+true <=> true;;
+
 (*overload infix operator*)
 let (@) n1 n2 =
   (n1 * 10) + n2;;
@@ -35,6 +45,11 @@ let c = (2.5, 3.5) in c ++ c;;
 let ( ** ) l x = List.map (fun k -> Float.pow (float(k)) (float(x))) l;;
 
 [1; 2; 3] ** 4;;
+
+(*there are rules telling how infix operator should look like*)
+let (=?) l x = List.filter (fun k -> k = x) l <> [];;
+
+[1; 2; 3; 4] =? 3;;
 
 let (!.) l = List.map (fun x -> (-x)) l;;
 

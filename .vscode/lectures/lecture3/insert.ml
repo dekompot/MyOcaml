@@ -16,4 +16,3 @@ let insert_ge elem = insert (>=) elem;;
 
 insert_ge 6 [5; 4; 3; 2; 1];;
 insert_ge 4 [6; 5; 3; 2; 1];;
-
