@@ -1,4 +1,4 @@
-(*NO SYNTATIC SUGAR VERSION*)
+(*NO SYNTACTIC SUGAR VERSION*)
 
 let curry3 = function f -> function x -> function y -> function z -> f(x, y, z);;
 
@@ -13,6 +13,8 @@ max3 (2, 1, 3);;
 max3 (2, 3, 1);;
 
 curry3 max3 1 2 3;;
+
+curry3 max3 1 2;;
 
 let uncurry3 = function f -> function (x, y, z) -> f x y z;;
 
@@ -29,7 +31,7 @@ min3 2 3 1;;
 
 uncurry3 min3 (1, 2, 3);;
 
-(*SYNTATIC SUGAR VERSION*)
+(*SYNTACTIC SUGAR VERSION*)
 let curry3 f x y z = f(x, y, z);;
 
 curry3 max3 1 2 3;;

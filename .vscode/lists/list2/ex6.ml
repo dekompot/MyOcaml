@@ -7,7 +7,7 @@ let p (xs, n) =
  
 let rec replaceNth (xs, n, x) = 
   match xs with 
-  | h::t when n = 0 -> x::t 
+  | _::t when n = 0 -> x::t 
   | h::t -> h::replaceNth(t, n - 1, x)
   | [] -> [];;
 
