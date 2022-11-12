@@ -19,7 +19,7 @@ in let rec merge (xs1, xs2) =
     | [h] -> h
     | [] -> []
     | _ -> loop (merge_two xss)
-  in loop (split_to_lists xs) ;; 
+  in loop (split_to_lists xs);; 
   
 mergesort (<) [13; 5; 10; 8; 6; 22; 11; 3; 12; 
 20; 7; 9; 14; 17; 19; 1; 2; 18];;

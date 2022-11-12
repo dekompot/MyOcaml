@@ -33,8 +33,8 @@ quicksort''([3; 3; 2; 4; 5; 3; 2; 5; 4]);;
 let rec quicksort4 = function 
 | [] -> []
 | x::xs -> let small = List.filter (fun y -> y < x) xs 
-          and large = List.filter (fun y -> y > x) xs 
-          in quicksort4 small @ [x] @ (x::quicksort4 large);;
+          and large = List.filter (fun y -> y >= x) xs 
+          in quicksort4 small @ (x::quicksort4 large);;
 
 quicksort4([13; 5; 10; 8; 6; 22; 11; 3; 12; 20; 7; 9; 14; 17; 19; 1; 2; 18]);;
 quicksort4([3; 3; 2; 4; 5; 3; 2; 5; 4]);;
