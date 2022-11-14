@@ -48,11 +48,23 @@ let rec postorder tree =
   | Node(v, tL, tR) -> postorder tL @ postorder tR @ [v];;
 
 postorder tree;;
-(*??? NOT WORKING*)
 let postorder' tree = 
   let rec postord = function 
   | (Empty, labels) -> labels 
-  | (Node(v, tL, tR), labels) -> postord(tL, postord(tR, labels)) @ [v]
+  | (Node(v, tL, tR), labels) -> postord(tL, postord(tR, v::labels))
 in postord(tree, []);;
 
 postorder' tree;;
+
+let rec list2bst xs = 
+  let rec insert2bst = function
+  | (k, Node(r, lt, rt)) -> 
+    if r < k then Node(r, insert2bst(k, lt), rt)
+    else if r > k then Node(r, lt,insert2bst(k, rt))
+    else failwith "Duplicated key"
+  | (k, Empty) -> Node(k, Empty, Empty)
+  in match xs with 
+  | h::t -> insert2bst(h, list2bst t)
+  | [] -> Empty;;
+
+list2bst [6; 4; 9; 2; 5];;
