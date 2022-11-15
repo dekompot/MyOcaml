@@ -75,4 +75,16 @@ print_string (build (Meta("UTF-8", Title("Hello World", None)),
                       LI'(TEXT("Self-driving cars", END)))), 
                     DIV(IMG("some_image.png", END), 
                     END))
-                    ))))))))
+                    ))))))));;
+                    
+print_string("\n\n");;
+
+print_string (build(Meta("UTF-8", Title("Hello World", None)), 
+                    OL(
+                      LI(TEXT("First Element", END),
+                      LI(
+                        UL(
+                          LI(TEXT("Coffee", END), LI'(TEXT("Tea", END))), END
+                          ), 
+                      LI'(TEXT("Third Element", END))
+                        )), END)));;
