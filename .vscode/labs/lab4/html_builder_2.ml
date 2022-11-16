@@ -1,4 +1,4 @@
-let indent = "  ";;
+let indent = "    ";;
 let nl = "\n";
 
 type head_tag = None | Title of string * head_tag | Meta of string * head_tag;;
@@ -6,9 +6,9 @@ type head_tag = None | Title of string * head_tag | Meta of string * head_tag;;
 type body_tag = 
 END 
 | TEXT of string * body_tag
+| I of string * body_tag
 | IMG of string * body_tag
 | A of string * body_tag * body_tag  
-| I of body_tag * body_tag  
 | BR of body_tag 
 | P of body_tag * body_tag 
 | DIV of body_tag * body_tag 
@@ -23,23 +23,40 @@ END
 and 
 list_element = LI' of body_tag | LI of body_tag * list_element;;
 
-let rec build_tag ind = function
+let get_tag = function
+| END -> ""
+| TEXT(_, _) -> ""
+| I(_, _) -> "i"
+| IMG(_, _) -> "img"
+| A(_, _, _) -> "a"
+| BR _ -> "br"
+| P(_, _) -> "p"
+| DIV(_, _) -> "div"
+| H1 (_, _) -> "h1"
+| H2 (_, _) -> "h2"
+| H3 (_, _) -> "h3"
+| H4 (_, _) -> "h4"
+| H5 (_, _) -> "h5"
+| H6 (_, _) -> "h6"
+| OL(_, _) -> "ol"
+| UL(_, _) -> "ul";;
+
+let format (bt, open_ind, text, close_ind) = 
+  let str_tag = get_tag bt 
+  in open_ind^"<"^str_tag^">"^text^close_ind^"</"^str_tag^">";;
+
+let rec build_tag ind bt = 
+  match bt with
   | END -> "" 
   | TEXT (s, next) -> s ^ build_tag ind next
   | IMG (src, next) -> nl^ind^"<img src="^src^" alt=\"laptop image\">" ^ build_tag ind next
-  | A (link, tag, next) -> "<a href="^link^">"^build_tag (ind ^ indent) tag^"</a>" ^ build_tag ind next
-  | I (tag, next) -> "<i>"^build_tag (ind ^ indent) tag^"</i>" ^ build_tag ind next
+  | A (link, tag, next) -> nl^ind^"<a href="^link^">"^build_tag (ind ^ indent) tag^"</a>" ^ build_tag ind next
+  | I (text, next) -> format(bt, "", text, "") ^ build_tag ind next
   | BR next -> nl^ind^"<\br>" ^ build_tag ind next
-  | DIV (tag, next) -> nl^ind^"<div>"^build_tag (ind ^ indent) tag^nl^ind^"</div>" ^ build_tag ind next
-  | P (tag, next) -> nl^ind^"<p>"^build_tag (ind ^ indent) tag^"</p>" ^ build_tag ind next
-  | H1 (text, next) -> nl^ind^"<h1>"^text^"</h1>" ^ build_tag ind next
-  | H2 (text, next) -> nl^ind^"<h2>"^text^"</h2>" ^ build_tag ind next
-  | H3 (text, next) -> nl^ind^"<h3>"^text^"</h3>" ^ build_tag ind next
-  | H4 (text, next) -> nl^ind^"<h4>"^text^"</h4>" ^ build_tag ind next
-  | H5 (text, next) -> nl^ind^"<h5>"^text^"</h5>" ^ build_tag ind next
-  | H6 (text, next) -> nl^ind^"<h6>"^text^"</h6>" ^ build_tag ind next
-  | OL (tags, next) -> nl^ind^"<ol>"^build_list_items (ind ^ indent) tags^nl^ind^"</ol>" ^ build_tag ind next
-  | UL (tags, next) -> nl^ind^"<ul>"^build_list_items (ind ^ indent) tags^nl^ind^"</ul>" ^ build_tag ind next
+  | DIV (tag, next) -> format(bt, nl^ind, build_tag (ind ^ indent) tag, nl^ind) ^ build_tag ind next
+  | P (tag, next) -> format(bt, nl^ind, build_tag (ind ^ indent) tag, "") ^ build_tag ind next
+  | H1 (text, next) | H2 (text, next) | H3 (text, next) | H4 (text, next) | H5 (text, next) | H6 (text, next) -> format(bt, nl^ind, text, "") ^ build_tag ind next
+  | OL (tags, next) | UL (tags, next) -> format(bt, nl^ind, build_list_items (ind ^ indent) tags, nl^ind) ^ build_tag ind next
 and build_list_items ind = function 
   | LI' tag -> nl^ind^"<li>"^build_tag ind tag^"</li>"
   | LI (tag, next) -> nl^ind^"<li>"^build_tag ind tag^"</li>"^build_list_items ind next
@@ -65,7 +82,7 @@ print_string (build (Meta("UTF-8", Title("Hello World", None)),
                     DIV(
                       P(
                         TEXT("Neural networks architecture is inspired by brain structure. When activities are repeated, the connections between those neurons are ", 
-                        I(TEXT("strengthen", END), TEXT(".", END))), END
+                        I("strengthen", TEXT(".", END))), END
                       ), 
                     H4(
                       "The most important applications",  
