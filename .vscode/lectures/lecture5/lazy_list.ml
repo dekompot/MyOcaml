@@ -46,6 +46,7 @@ let sqr_llist = lmap (fun x -> x * x);;
 
 ltake (10, sqr_llist(lfrom 2));;
 
+(*This will never stop if none of the elements fullfills the predicate*)
 let rec lfilter pred lxs = 
   match lxs with 
   | LNil -> LNil 
@@ -56,3 +57,6 @@ let even x = x mod 2 = 0;;
 ltake (10, lfilter even (lfrom 2));;
 
 let rec liter f x = LCons(x, fun () -> liter f (f x));;
+
+(*ltake (10, (lfilter (fun x -> x < 0) (lfrom 3)));;*)
+

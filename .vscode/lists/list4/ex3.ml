@@ -1,5 +1,6 @@
 type 'a bt = Empty | Node of 'a * 'a bt * 'a bt;;
 
+(*Complexity: O(n^2)*)
 let breadthBT bt = 
   let rec bfs queue = 
     match queue with 
