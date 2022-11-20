@@ -1,6 +1,6 @@
 {
-    "ocaml.sandbox": {
-      "kind": "opam",
-      "switch": "4.14.0+mingw64c"
-    }
+  "ocaml.sandbox": {
+    "kind": "opam",
+    "switch": "ocaml-base-compiler.4.13.1"
+  }
 }
