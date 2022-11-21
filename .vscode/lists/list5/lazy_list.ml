@@ -42,6 +42,20 @@ let lrepeat k lxs =
   in inner k lxs;;
 
 ltake (14, (lrepeat 3 (lfrom 3)));;
+ltake (10, (lrepeat 3 (LCons('a', lazy (LCons('b', lazy (LCons('c', lazy LNil))))))));;
+ltake (10, (lrepeat 3 LNil));;
+
+let lrepeat2 k lxs = 
+  let rec inner n lxs = 
+    match lxs with 
+    | LCons(h, lazy t) when n = 0 -> inner k t
+    | LCons(h, lazy t) -> LCons(h, lazy (inner (n - 1) lxs))
+    | LNil -> LNil
+  in inner k lxs;;
+
+ltake (14, (lrepeat2 3 (lfrom 3)));;
+ltake (10, (lrepeat2 3 (LCons('a', lazy (LCons('b', lazy (LCons('c', lazy LNil))))))));;
+ltake (10, (lrepeat2 3 LNil));;
 
 let lfib = 
   let rec inner (n1, n2) = LCons(n1, lazy (inner(n2, n1 + n2)))

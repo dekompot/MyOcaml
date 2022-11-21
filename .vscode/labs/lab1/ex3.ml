@@ -6,11 +6,8 @@
 
 let rec rotations l =
   if l = [] then failwith "list is empty"
-    (*wykonuje sie tylko dla listy 1-elementowej*)
   else if List.tl l = [] then List.hd l
-    (*jesli lista ma dwa elementy, podziel pierwszy przez drugi*)
   else if (List.tl (List.tl l)) = [] then (-1. *. (List.hd l)) /. (List.hd (List.tl l))
-    (*z kazdym wywolaniem usuwamy drugi element*)
   else rotations((-1. *. (List.hd l)) :: (List.tl (List.tl l)));;
 
 (*even length list*) 

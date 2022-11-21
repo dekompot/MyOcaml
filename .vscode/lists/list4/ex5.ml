@@ -13,7 +13,6 @@ let depth_search (Graph succ) start_node =
   let rec search visited neighbours = 
     match neighbours with 
     | [] -> ([], visited)
-    (*maybe use if-else???*)
     | h::t -> match h with 
               | h when List.mem h visited -> search visited t 
               | h -> let (s, v) = search (h::visited) (succ h) in 
@@ -39,3 +38,16 @@ depth_search g2 0;;
   
 depth_search g2 4;;  
 
+let depth_search_2 (Graph succ) start_node = 
+  let rec search queue visited = 
+    match queue with 
+    | [] -> List.rev visited
+    | h::t -> if List.mem h visited then search t visited 
+    else search(succ h @ t) (h::visited)
+  in search [start_node] [];;
+
+depth_search_2 g 4;;
+
+depth_search_2 g2 0;;
+  
+depth_search_2 g2 4;; 
