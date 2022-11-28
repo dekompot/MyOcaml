@@ -12,6 +12,7 @@ let rec lsplit lxs =
   match lxs with 
   | LNil -> (LNil, LNil) 
   | LCons(x1, xf) -> match (xf()) with 
+  (*how to compute it only once???*)
                   | LCons(x2, yf) -> (LCons(x1, fun () -> fst(lsplit (yf()))), 
                                       LCons(x2, fun () -> snd(lsplit (yf()))))
                   | LNil -> (LCons(x1, fun () -> LNil), LNil);;

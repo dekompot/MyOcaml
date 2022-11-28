@@ -15,9 +15,9 @@ v.(-3) +. 5.0;;
 
 let str_vector = [|"a"; "b"; "c"|];;
 
-Array.fold_left (fun acc x -> (acc +. x)) 0.0 v;;
+Array.fold_left (+.) 0.0 v;;
 
-Array.fold_right (fun s acc -> (acc ^ s)) str_vector "";;
+Array.fold_right (^) str_vector "";;
 
 Array.to_list str_vector;;
 Array.of_list [1; 2; 3];;

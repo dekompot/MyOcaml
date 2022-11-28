@@ -1,10 +1,10 @@
 (*constructor: 'a -> 'a ref*)
 let x = ref 5;;
 
-(*deallocator: 'a ref -> 'a*)
+(*dereferencing: 'a ref -> 'a*)
 !x;;
 
-(*dereference: 'a ref -> 'a -> unit*)
+(*assignment: 'a ref -> 'a -> unit*)
 x := 7;;
 
 !x;;
