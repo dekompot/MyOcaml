@@ -15,9 +15,19 @@ let enqueue (e, q) =
   | _ -> q.arr.(q.r) <- e; q.r <- (q.r + 1) mod q.n; print_string "case 3";;
 
 
+let enqueue'' (e, q) = 
+  begin 
+    if q.f = (q.r + 1) mod q.n then failwith "full queue"
+    else if q.f = q.r then q.arr <- Array.make q.n e 
+    else q.arr.(q.r) <- e 
+  end;
+  q.r <- (q.r + 1) mod q.n;;
+  
+
 let q = {n=4; r=0; f=0; arr=[||]};;
 
-enqueue (1, q);;
+enqueue'' (1, q);;
 q;;
-
+enqueue'' (2, q);;
+q;;
 

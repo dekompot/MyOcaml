@@ -58,16 +58,19 @@ struct
   type 'a t = 'a list * 'a list
   exception Empty of string
   let empty() = ([], [])
+
+  let normalize q = 
+    match q with 
+    | ([], q2) -> (List.rev q2, [])
+    | _ -> q
+
   let enqueue (e, (q1, q2)) = 
-    match q1 with 
-    | [] -> ([e], [])
-    | _ -> (q1, e::q2)
+    normalize(q1, e::q2)
   
   let dequeue q = 
     match q with 
-    | (_::[], q2) -> (List.rev q2, [])
-    | (_::tl, q2) -> (tl, q2)
     | ([], []) -> ([], [])
+    | (h::tl, q2) -> normalize(tl, q2)
   
   let first (q1, _) = 
     match q1 with 
