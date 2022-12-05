@@ -69,7 +69,7 @@ struct
   
   let dequeue q = 
     match q with 
-    | ([], []) -> ([], [])
+    | ([], _) -> ([], [])
     | (h::tl, q2) -> normalize(tl, q2)
   
   let first (q1, _) = 
