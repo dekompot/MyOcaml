@@ -26,28 +26,32 @@ end;;
 StringComparator.compare "a" "b";;
 StringComparator.compare "aaa" "a";;
 
-module TupleComparator : COMPARATOR with type t = int * int = 
-struct
-  type t = int * int 
-  let compare t1 t2 = 
-    match IntComparator.compare (fst t1) (fst t2) with
-    | EQ -> IntComparator.compare (snd t1) (snd t2)
-    | result -> result 
+
+module ReverseComparator (C: COMPARATOR) = 
+struct 
+  type t = C.t 
+  let compare e1 e2 = 
+    match C.compare e1 e2 with 
+    | LT -> GT 
+    | GT -> LT 
+    | EQ -> EQ;;
 end;;
 
-TupleComparator.compare (2, 3) (1, 4);;
-TupleComparator.compare (2, 3) (2, 4);;
-TupleComparator.compare (1, 1) (1, 1);;
+module ReverseIntComparator = ReverseComparator(IntComparator);;
+
+ReverseIntComparator.compare 1 2;;
+ReverseIntComparator.compare 5 4;;
+ReverseIntComparator.compare 3 3;;
+
                     
 module PriorityQueueImpl (C : COMPARATOR) = 
 struct
+  type t = C.t 
   type queue = {mutable n : int; mutable size : int; mutable arr : C.t option array}
   exception Empty of string 
   exception Full of string 
-  
-  let capacity = 5;;
 
-  let create () = {n=0; size=capacity; arr=Array.make capacity None};;
+  let create capacity = {n=0; size=capacity; arr=Array.make capacity None};;
 
   let compare q i j = 
     let Some(key_i) = q.arr.(i) and Some(key_j) = q.arr.(j) in C.compare key_i key_j;;
@@ -60,11 +64,12 @@ struct
   let parent child = Int.shift_right (child - 1) 1;;
 
   let sink q i = 
-    let p = ref i and c = ref (left_child i) in 
-    while !c < q.n do
-      if succ !c < q.n && compare q (succ !c) !c = GT then c := succ !c;
-      if compare q !p !c = LT then (swap q !p !c; p := !c; c := left_child !p;)
-      else c := q.n done;;
+    let p = ref i and l_c = ref (left_child i) and r_c = ref 0 in 
+    while !l_c < q.n do
+      r_c := succ !l_c; 
+      if !r_c < q.n && compare q !r_c !l_c = GT then l_c := !r_c;
+      if compare q !p !l_c = LT then (swap q !p !l_c; p := !l_c; l_c := left_child !p;)
+      else l_c := q.n done;;
 
   let swim q i = 
     let c = ref i and p = ref (parent i) in 
@@ -87,6 +92,10 @@ struct
     | 0 -> raise (Empty "Empty queue")
     | _ -> let Some(key) = q.arr.(0) in key;;
 
+  let isEmpty q = q.n = 0;;
+
+  let isFull q = q.n = q.size;;
+
   let print_entries q print = 
     for i = 0 to q.n - 1 do let Some(key) = q.arr.(i) in print key; print_string " " done; 
     print_newline();;
@@ -95,8 +104,9 @@ end
 
 module StringMaxQueue = PriorityQueueImpl(StringComparator);;
 
-let queue = StringMaxQueue.create();;
+let queue = StringMaxQueue.create(5);;
 
+StringMaxQueue.isEmpty queue;;
 StringMaxQueue.insert queue "a";;
 StringMaxQueue.peek queue;;
 StringMaxQueue.print_entries queue print_string ;;
@@ -106,6 +116,7 @@ StringMaxQueue.print_entries queue print_string ;;
 StringMaxQueue.insert queue "c";;
 StringMaxQueue.insert queue "d";;
 StringMaxQueue.insert queue "e";;
+StringMaxQueue.isFull queue;;
 StringMaxQueue.peek queue;;
 StringMaxQueue.print_entries queue print_string ;;
 StringMaxQueue.retrieve queue;;
@@ -124,8 +135,54 @@ StringMaxQueue.print_entries queue print_string ;;
 
 module IntMaxQueue = PriorityQueueImpl(IntComparator);;
 
-let queue = IntMaxQueue.create();;
+let queue = IntMaxQueue.create(6);;
 
+IntMaxQueue.isEmpty queue;;
 IntMaxQueue.insert queue 10;;
+IntMaxQueue.insert queue 7;;
+IntMaxQueue.insert queue 20;;
+IntMaxQueue.insert queue 14;;
+IntMaxQueue.insert queue 22;;
+IntMaxQueue.insert queue 16;;
+IntMaxQueue.isFull queue;;
+IntMaxQueue.print_entries queue print_int;;
+IntMaxQueue.retrieve queue;;
+IntMaxQueue.retrieve queue;;
+IntMaxQueue.print_entries queue print_int;;
+IntMaxQueue.insert queue 32;;
+IntMaxQueue.print_entries queue print_int;;
 
+module IntMinQueue = PriorityQueueImpl(ReverseIntComparator);;
 
+let queue = IntMinQueue.create(6);;
+
+IntMinQueue.isEmpty queue;;
+IntMinQueue.insert queue 10;;
+IntMinQueue.insert queue 7;;
+IntMinQueue.insert queue 20;;
+IntMinQueue.insert queue 14;;
+IntMinQueue.insert queue 22;;
+IntMinQueue.insert queue 16;;
+IntMinQueue.isFull queue;;
+IntMinQueue.print_entries queue print_int;;
+IntMinQueue.retrieve queue;;
+IntMinQueue.retrieve queue;;
+IntMinQueue.print_entries queue print_int;;
+IntMinQueue.insert queue 32;;
+IntMinQueue.print_entries queue print_int;;
+
+module type PriorityQueue = 
+sig 
+  type t 
+  type queue 
+  val create : int -> queue 
+  val insert : queue -> t -> unit 
+  val retrieve : queue -> t 
+  val isEmpty : queue -> bool 
+  val isFull : queue -> bool
+  val peek : queue -> t
+end
+
+module MinIntInterfacePQ : PriorityQueue = IntMinQueue;;
+module MaxIntInterfacePQ : PriorityQueue = IntMaxQueue;;
+module StringInterfacePQ : PriorityQueue = StringMaxQueue;;
