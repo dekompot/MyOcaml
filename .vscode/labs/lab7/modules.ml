@@ -47,15 +47,13 @@ ReverseIntComparator.compare 3 3;;
 module PriorityQueueImpl (C : COMPARATOR) = 
 struct
   type t = C.t 
-  type queue = {mutable n : int; mutable arr : C.t option array}
+  type queue = {mutable n : int; mutable capacity: int; mutable arr : C.t option array}
   exception Empty of string
-
-  let capacity = 4
-  let create () = {n=0; arr=Array.make capacity None};;
+  let create ?(capacity=4) () = {n=0; capacity=capacity; arr=Array.make capacity None};;
 
   let isEmpty q = q.n = 0;;
 
-  let increase q = q.arr <- Array.append q.arr (Array.make capacity None)
+  let increase q = q.arr <- Array.append q.arr (Array.make q.capacity None)
 
   let compare q i j = 
     let Some(key_i) = q.arr.(i) and Some(key_j) = q.arr.(j) in C.compare key_i key_j;;
@@ -98,7 +96,7 @@ end
 
 module StringMaxQueue = PriorityQueueImpl(StringComparator);;
 
-let queue = StringMaxQueue.create();;
+let queue = StringMaxQueue.create ~capacity:6 ();;
 
 StringMaxQueue.isEmpty queue;;
 StringMaxQueue.insert queue "a";;
@@ -166,7 +164,7 @@ module type PriorityQueue =
 sig 
   type t 
   type queue 
-  val create : unit -> queue 
+  val create : ?capacity:int -> unit -> queue 
   val insert : queue -> t -> unit 
   val retrieve : queue -> t 
   val isEmpty : queue -> bool
